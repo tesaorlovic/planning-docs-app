@@ -101,7 +101,7 @@ function ProjectDocumentWrapper({
   uploadedFiles: File[];
   issues: typeof mockIssues;
 }) {
-  const { projectId } = useParams<{ projectId: string }>();
+  // const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
   // For demo purposes, use first uploaded file or null
