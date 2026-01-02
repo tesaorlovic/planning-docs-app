@@ -16,13 +16,13 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
   const [numPages, setNumPages] = useState<number | null>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
   const [resultsTab, setResultsTab] = useState<ResultsTabType>('results');
-  const [activeTab, setActiveTab] = useState<'summary' | 'documents'>('documents');
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     setCurrentPage(1);
     setIsLoadingPdf(false);
     toast.success('Document loaded successfully', { id: 'pdf-load' });
+    isLoadingPdf; // TODO: remove unused variable
   };
 
   const onDocumentLoadError = () => {
@@ -38,7 +38,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
         {/* Left side - Main content */}
         <div className="lg:col-span-2">
           <div className="p-6 bg-gray-100">
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {/* Back Button */}
               <button
                 onClick={onBack}
@@ -50,39 +50,11 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
             </div>
           </div>
 
-          {/* Tabs */}
-          {/* <div className="p-6 pb-0 bg-gray-100 mb-6">
-            <div className="max-w-3xl mx-auto">
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActiveTab('summary')}
-                  className={`px-4 py-2 font-medium ${
-                    activeTab === 'summary'
-                      ? 'border-t-1 border-l-1 border-r-1 border-gray-300 bg-white'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  Summary
-                </button>
-                <button
-                  onClick={() => setActiveTab('documents')}
-                  className={`px-4 py-2 font-medium ${
-                    activeTab === 'documents'
-                      ? 'border-t-1 border-l-1 border-r-1 border-gray-300 bg-white'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  Documents
-                </button>
-              </div>
-            </div>
-          </div> */}
-
           {/* PDF Viewer */}
-          <div className="max-w-3xl mx-auto p-6">
+          <div className="max-w-5xl mx-auto p-6">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">{pdfFile ? pdfFile.name : 'Site Map.pdf'}</h2>
+                <h2 className="text-lg font-normal">{pdfFile ? pdfFile.name : 'Site Map.pdf'}</h2>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -150,12 +122,12 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
 
         {/* Right side - Results/Sources */}
         <div className="lg:col-span-1 border-l border-gray-300">
-          <div className="bg-white p-8 pt-12 sticky top-6">
+          <div className="bg-white p-8 pt-12 sticky top-6 h-screen">
             {/* Tabs */}
-            <div className="flex border-b mb-6">
+            <div className="flex border-gray-300 border-b mb-6 gap-2">
               <button
                 onClick={() => setResultsTab('results')}
-                className={`flex-1 px-4 py-3 font-medium ${
+                className={`px-4 py-3 font-medium ${
                   resultsTab === 'results'
                     ? 'border-t border-l border-r border-gray-300 bg-white'
                     : 'text-gray-600'
@@ -165,7 +137,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
               </button>
               <button
                 onClick={() => setResultsTab('sources')}
-                className={`flex-1 px-4 py-3 font-medium ${
+                className={`px-4 py-3 font-medium ${
                   resultsTab === 'sources'
                     ? 'border-t border-l border-r border-gray-300 bg-white'
                     : 'text-gray-600'
@@ -178,7 +150,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pdfFile, issues, onBack
             {/* Issues */}
             <div className="space-y-4">
               {issues.map((issue, idx) => (
-                <div key={idx} className="border rounded-lg p-4">
+                <div key={idx} className="border p-4 bg-gray-100">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm font-semibold">

@@ -1,0 +1,28 @@
+{
+  "root": [
+    "./src/app.tsx",
+    "./src/main.tsx",
+    "./src/vite-env.d.ts",
+    "./src/components/documents/annotationsidebar.tsx",
+    "./src/components/documents/pdfviewer.tsx",
+    "./src/components/layout/header.tsx",
+    "./src/components/projects/analysislog.tsx",
+    "./src/components/projects/documentstab.tsx",
+    "./src/components/projects/projectheader.tsx",
+    "./src/components/projects/summarytab.tsx",
+    "./src/components/upload/fileupload.tsx",
+    "./src/data/mockdata.ts",
+    "./src/hooks/usedragprevention.ts",
+    "./src/lib/utils.ts",
+    "./src/pages/analysisprogress.tsx",
+    "./src/pages/documentviewer.tsx",
+    "./src/pages/landingpage.tsx",
+    "./src/pages/projectdetails.tsx",
+    "./src/pages/projectoverview.tsx",
+    "./src/routes/index.tsx",
+    "./src/types/index.ts",
+    "./src/utils/navigation.ts",
+    "./src/utils/pdfsetup.ts"
+  ],
+  "version": "5.9.3"
+}

@@ -28,9 +28,9 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ onViewDocument }) => {
               className="border rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
               onClick={onViewDocument}
             >
-              <div className="bg-green-100 h-32 flex items-center justify-center">
+              <div className="bg-gray-100 h-32 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-full h-24 bg-green-200 mb-2"></div>
+                  <div className="w-full h-24 bg-gray-200 mb-2"></div>
                 </div>
               </div>
               <div className="p-2 bg-white">
