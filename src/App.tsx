@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
@@ -74,7 +74,6 @@ function AppContent() {
   );
 }
 
-// Wrapper for analysis document viewer
 function AnalysisDocumentWrapper({
   uploadedFiles,
   issues,
@@ -93,7 +92,6 @@ function AnalysisDocumentWrapper({
   );
 }
 
-// Wrapper for project document viewer (for direct access like /project/45655891279)
 function ProjectDocumentWrapper({
   uploadedFiles,
   issues,
@@ -104,7 +102,6 @@ function ProjectDocumentWrapper({
   // const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
-  // For demo purposes, use first uploaded file or null
   const pdfFile = uploadedFiles[0] || null;
 
   return (
@@ -114,10 +111,10 @@ function ProjectDocumentWrapper({
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Toaster position="top-right" />
       <AppContent />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

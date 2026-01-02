@@ -6,14 +6,12 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Only use base path in production (for GitHub Pages)
-  // base: command === 'build' ? '/planning-docs-app/' : '/',
-  base: process.env.NODE_ENV === 'production' ? '/planning-docs-app/' : '/',
-}));
+  base: '/planning-docs-app/',
+});
