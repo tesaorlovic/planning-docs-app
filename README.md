@@ -6,22 +6,24 @@ A React-based application for analyzing planning documents using AI, built with 
 
 - 📄 PDF document viewing and navigation
 - 📤 Drag-and-drop file upload
-- 🔍 AI-powered planning document analysis
-- 📊 Project overview and management
+- 🔍 AI-powered planning document analysis with real-time progress tracking
+- 📊 Interactive summary with collapsible sections
 - 🔔 Toast notifications for user feedback
 - 💾 Support for PDF, DWG, and IFC files
+- 🎨 GOV.UK Design System inspired UI
 
 ## Tech Stack
 
 - **React 18** with TypeScript
 - **Vite** - Fast build tool and dev server
 - **Tailwind CSS v4** - Utility-first styling
-- **shadcn/ui** UI Component Library
-- **react-pdf** - PDF rendering
+- **React Router v6** - Client-side routing
+- **react-pdf 9.1.0** - PDF rendering
+- **pdfjs-dist 4.4.168** - PDF.js library
 - **react-dropzone** - File upload handling
 - **react-hot-toast** - Notifications
 - **Lucide React** - Icon library
-- **React Router** - Client-side routing
+- **Prettier** - Code formatting
 
 ## Prerequisites
 
@@ -63,49 +65,117 @@ The app will be available at `http://localhost:5173`
 - `npm run format:check` - Check code formatting
 - `npm run deploy` - Deploy to GitHub Pages
 
+## Application Routes
+
+- `/` - Landing page with file upload
+- `/analysis` - Analysis progress page with real-time updates
+- `/analysis/document/:index` - View specific uploaded document
+- `/project/:projectId` - Direct project document access
+
 ## Project Structure
 
 ```
 planning-docs-app/
 ├── src/
 │   ├── components/          # Reusable UI components
-│   │   ├── layout/         # Layout components (Header, etc.)
-│   │   ├── documents/      # Document-related components
-│   │   ├── projects/       # Project-related components
+│   │   ├── analysis/       # Analysis-specific components
+│   │   │   ├── SummaryTab.tsx
+│   │   │   ├── DocumentsTab.tsx
+│   │   │   └── AnalysisLog.tsx
+│   │   ├── common/         # Shared components
+│   │   │   └── Tabs.tsx
+│   │   ├── documents/      # Document viewer components
+│   │   │   ├── PDFViewer.tsx
+│   │   │   └── AnnotationSidebar.tsx
+│   │   ├── layout/         # Layout components
+│   │   │   ├── Header.tsx
+│   │   │   └── Logo.tsx
+│   │   ├── projects/       # Project components
+│   │   │   └── ProjectHeaderInfo.tsx
 │   │   └── upload/         # Upload components
+│   │       └── FileUpload.tsx
 │   ├── pages/              # Page components
 │   │   ├── LandingPage.tsx
 │   │   ├── AnalysisProgress.tsx
-│   │   ├── ProjectOverview.tsx
-│   │   ├── ProjectDetails.tsx
 │   │   └── DocumentViewer.tsx
 │   ├── types/              # TypeScript type definitions
+│   │   └── index.ts
 │   ├── utils/              # Utility functions
+│   │   ├── pdfSetup.ts
+│   │   └── navigation.ts
 │   ├── hooks/              # Custom React hooks
+│   │   └── useDragPrevention.ts
 │   ├── data/               # Mock data
+│   │   └── mockData.ts
 │   ├── routes/             # Route definitions
+│   │   └── index.ts
 │   ├── App.tsx             # Main app component
 │   ├── main.tsx            # Entry point
 │   └── index.css           # Global styles
 ├── public/                 # Static assets
 │   └── .nojekyll          # GitHub Pages config
+├── .prettierrc            # Prettier configuration
+├── .prettierignore        # Prettier ignore file
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
 └── README.md
 ```
 
+## Key Features
+
+### File Upload
+
+- Drag-and-drop interface with visual feedback
+- Support for multiple file formats (PDF, DWG, IFC)
+- File preview with size information
+- Easy file removal
+
+### Analysis Progress
+
+- Real-time progress tracking with percentage display
+- Live analysis log with step-by-step updates
+- Interactive tabs (Summary and Documents)
+- Document thumbnails with click-to-view functionality
+
+### Document Viewer
+
+- Full-screen PDF rendering
+- Page navigation controls
+- Issue annotations sidebar with expandable sections
+- Results/Sources tabs for detailed information
+
+### Summary View
+
+- Status overview (Rejected/Approved/Warning)
+- Collapsible policy sections:
+  - Supporting documents & comments
+  - National Policy
+  - Local/Regional Policy
+  - Geospatial Constraints
+- Color-coded icons for quick status recognition
+
 ## Configuration
 
 ### Tailwind CSS
 
-This project uses Tailwind CSS v4 with the Vite plugin. Configuration is minimal and handled in `vite.config.ts`.
+This project uses Tailwind CSS v4 with the Vite plugin. The configuration uses custom colors:
+
+- `custom-blue`: #1D70B8 (GOV.UK blue)
 
 ### TypeScript
 
-TypeScript configuration can be found in `tsconfig.json`. Path aliases are set up for cleaner imports:
+TypeScript configuration is in `tsconfig.json`. Path aliases are set up:
 
 - `@/` maps to `./src/`
+
+### React PDF
+
+PDF rendering is configured in `src/utils/pdfSetup.ts`:
+
+- Uses `pdfjs-dist@4.4.168` for compatibility
+- Worker URL configured for proper PDF rendering
+- Text and annotation layers disabled for cleaner display
 
 ## Deployment to GitHub Pages
 
@@ -113,13 +183,10 @@ This project is configured for easy deployment to GitHub Pages.
 
 ### First-time Setup
 
-1. **Update `vite.config.ts`** - Make sure the `base` path matches your repository name:
+1. **Update `vite.config.ts`** - The base path is configured to work in both development and production:
 
 ```typescript
-export default defineConfig({
-  base: '/planning-docs-app/', // Replace with your repo name
-  // ...
-});
+   base: process.env.NODE_ENV === 'production' ? '/planning-docs-app/' : '/',
 ```
 
 2. **Install gh-pages** (already included in dependencies):
@@ -190,12 +257,15 @@ To use a custom domain:
 - Follow TypeScript best practices
 - Use meaningful component and variable names
 - Keep components focused and single-responsibility
+- Extract reusable logic into custom hooks
+- Separate concerns into dedicated component files
 
 ### File Naming
 
 - Components: PascalCase (e.g., `ProjectCard.tsx`)
 - Utilities: camelCase (e.g., `formatDate.ts`)
 - Types: PascalCase (e.g., `Project.ts`)
+- Hooks: camelCase with `use` prefix (e.g., `useDragPrevention.ts`)
 
 ### Code Formatting
 
@@ -211,6 +281,17 @@ npm run format:check
 
 VS Code will auto-format on save if you have the Prettier extension installed.
 
+### Component Organization
+
+Components are organized by feature/domain:
+
+- `analysis/` - Components specific to the analysis page
+- `common/` - Shared/reusable components
+- `documents/` - Document viewing components
+- `layout/` - Layout and structural components
+- `projects/` - Project-related components
+- `upload/` - File upload components
+
 ## Building for Production
 
 ```bash
@@ -225,29 +306,36 @@ To preview the production build locally:
 npm run preview
 ```
 
-## Environment Variables
-
-Currently, no environment variables are required. When connecting to a backend API, create a `.env` file:
-
-```
-VITE_API_URL=your_api_url_here
-```
-
 ## Troubleshooting
 
 ### PDF files not loading
 
-Make sure the PDF.js worker is properly configured. The worker URL is set in `src/utils/pdfSetup.ts`.
+- Ensure `react-pdf@9.1.0` and `pdfjs-dist@4.4.168` are installed
+- Check that the worker URL is properly configured in `src/utils/pdfSetup.ts`
+- Clear the Vite cache: `rm -rf node_modules/.vite` and restart dev server
 
 ### Drag and drop not working
 
-Ensure browser default drag-and-drop behavior is prevented. This is handled in the `useDragPrevention` hook.
+- Ensure browser default drag-and-drop behavior is prevented
+- This is handled in the `useDragPrevention` hook
 
-### Routing issues on GitHub Pages
+### Routes not working in development
 
-If routes don't work after deploying to GitHub Pages, the app uses `BrowserRouter` which requires server-side routing configuration. GitHub Pages doesn't support this out of the box, but the `404.html` fallback handles this.
+- Check that `vite.config.ts` has the correct base path configuration
+- For local development, base should be `/`
+- Clear Vite cache: `rm -rf node_modules/.vite`
 
-Alternatively, you can switch to `HashRouter` in `src/App.tsx` for simpler deployment (routes will look like `#/overview` instead of `/overview`).
+### Version mismatch errors with PDF.js
+
+- Ensure `react-pdf` and `pdfjs-dist` versions are compatible
+- Current working combination: `react-pdf@9.1.0` with `pdfjs-dist@4.4.168`
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ## Live Demo
 
@@ -258,18 +346,16 @@ View the live app at: https://YOUR_USERNAME.github.io/planning-docs-app/
 1. Create a feature branch
 2. Make your changes
 3. Test thoroughly
-4. Submit a pull request
+4. Format code with Prettier
+5. Submit a pull request
 
 ## License
 
 [Your License Here]
 
-## Support
-
-For issues and questions, please open an issue on GitHub.
-
 ## Acknowledgments
 
-- GOV.UK Design System for design inspiration
+- GOV.UK Design System for design inspiration and color scheme
 - React PDF for PDF rendering capabilities
-- Tailwind CSS for styling framework
+- Tailwind CSS for the utility-first styling framework
+- Lucide Icons for the comprehensive icon set
