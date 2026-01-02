@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import Header from '../components/layout/Header';
-import ProjectHeaderInfo from '../components/projects/ProjectHeaderInfo';
+import ProjectHeaderInfo from '../components/analysis/ProjectHeaderInfo';
 import Tabs from '../components/common/Tabs';
 import SummaryTab from '../components/analysis/SummaryTab';
 import DocumentsTab from '../components/analysis/DocumentsTab';

@@ -4,19 +4,15 @@ import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
 import AnalysisProgress from './pages/AnalysisProgress';
-import ProjectOverview from './pages/ProjectOverview';
-import ProjectDetails from './pages/ProjectDetails';
 import DocumentViewer from './pages/DocumentViewer';
 import { useDragPrevention } from './hooks/useDragPrevention';
-import { mockProjects, mockIssues } from './data/mockData';
-import { Project } from './types';
+import { mockIssues } from './data/mockData';
 import { ROUTES } from './routes';
 import './utils/pdfSetup';
 
 function AppContent() {
   const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useDragPrevention();
@@ -45,26 +41,6 @@ function AppContent() {
     navigate(ROUTES.ANALYSIS);
   };
 
-  const handleBackToHome = () => {
-    setIsAnalyzing(false);
-    navigate(ROUTES.HOME);
-  };
-
-  const handleProjectClick = (project: Project) => {
-    toast.success(`Opened ${project.name}`);
-    navigate(ROUTES.PROJECT.replace(':projectId', project.id));
-  };
-
-  const handleViewDocument = (projectId: string) => {
-    if (uploadedFiles.length > 0) {
-      setPdfFile(uploadedFiles[0]);
-      toast.loading('Loading document...', { id: 'pdf-load' });
-    } else {
-      toast.error('No documents uploaded');
-    }
-    navigate(ROUTES.DOCUMENT.replace(':projectId', projectId));
-  };
-
   return (
     <Routes>
       <Route
@@ -89,24 +65,8 @@ function AppContent() {
       />
 
       <Route
-        path={ROUTES.OVERVIEW}
-        element={
-          <ProjectOverview
-            projects={mockProjects}
-            onProjectClick={handleProjectClick}
-            onBack={handleBackToHome}
-          />
-        }
-      />
-
-      <Route
         path={ROUTES.PROJECT}
-        element={<ProjectDetailsWrapper onViewDocument={handleViewDocument} />}
-      />
-
-      <Route
-        path={ROUTES.DOCUMENT}
-        element={<DocumentViewerWrapper pdfFile={pdfFile} issues={mockIssues} />}
+        element={<ProjectDocumentWrapper uploadedFiles={uploadedFiles} issues={mockIssues} />}
       />
 
       <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
@@ -133,45 +93,22 @@ function AnalysisDocumentWrapper({
   );
 }
 
-function ProjectDetailsWrapper({
-  onViewDocument,
-}: {
-  onViewDocument: (projectId: string) => void;
-}) {
-  const { projectId } = useParams<{ projectId: string }>();
-  const navigate = useNavigate();
-
-  const project = mockProjects.find(p => p.id === projectId);
-
-  if (!project) {
-    return <Navigate to={ROUTES.OVERVIEW} replace />;
-  }
-
-  return (
-    <ProjectDetails
-      project={project}
-      onBack={() => navigate(ROUTES.OVERVIEW)}
-      onViewDocument={() => onViewDocument(projectId!)}
-    />
-  );
-}
-
-function DocumentViewerWrapper({
-  pdfFile,
+// Wrapper for project document viewer (for direct access like /project/45655891279)
+function ProjectDocumentWrapper({
+  uploadedFiles,
   issues,
 }: {
-  pdfFile: File | null;
+  uploadedFiles: File[];
   issues: typeof mockIssues;
 }) {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
+  // For demo purposes, use first uploaded file or null
+  const pdfFile = uploadedFiles[0] || null;
+
   return (
-    <DocumentViewer
-      pdfFile={pdfFile}
-      issues={issues}
-      onBack={() => navigate(ROUTES.PROJECT.replace(':projectId', projectId!))}
-    />
+    <DocumentViewer pdfFile={pdfFile} issues={issues} onBack={() => navigate(ROUTES.ANALYSIS)} />
   );
 }
 
